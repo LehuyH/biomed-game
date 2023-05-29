@@ -1,6 +1,6 @@
 <template>
     <section ref="grid">
-        <p><span class="px-2 py-1 bg-blue-500 text-white font-bold rounded">1/20</span> {{ builtString.join("") }}</p>
+        <p><span class="px-2 py-1 bg-blue-500 text-white font-bold rounded">{{gameState.level}}/20</span> {{ builtString.join("") }}</p>
         <div class="space-x-2 space-y-2" v-for="row,rowIndex in gameState.grid">
             <div 
              @mousedown="letterHover(rowIndex,letterIndex,true)"
@@ -27,16 +27,10 @@ const gameState = useGameState()
 const selected = ref<string[]>([])
 
 onMounted(()=>{
-    setGrid('baka')
+    setGrid('floof')
 })
 
 const { pressed } = useMousePressed()
-
-watchEffect(()=>{
-    if(!pressed.value){
-        selected.value = []
-    }
-})
 
 const builtString = computed(()=>selected.value.map(e=>{
     const rowIndex = parseInt(e.split(",")[0])
@@ -44,6 +38,17 @@ const builtString = computed(()=>selected.value.map(e=>{
     
     return gameState.value.grid[rowIndex][letterIndex]
 }))
+
+watchEffect(()=>{
+    if(!pressed.value){
+        checkCorrect(selected.value.map(e=>{
+        const rowIndex = parseInt(e.split(",")[0])
+        const letterIndex = parseInt(e.split(",")[1])
+        return gameState.value.grid[rowIndex][letterIndex]}).join(""))
+
+        selected.value = []
+    }
+})
 
 const letterHover = async (rowIndex:number,letterIndex:number,force?:boolean)=>{
     if(pressed.value || force){

@@ -2,7 +2,9 @@ import WordSearch from '@/utils/wordsearch'
 
 export const useGameState = () => useState('gameState',()=>{
     return{
-        grid:[] as string[][]
+        grid:[] as string[][],
+        level:1,
+        answer:null as string|null
     }
 })
 
@@ -17,4 +19,13 @@ export const setGrid = (text:string)=>{
         diacritics: true
     })
     useGameState().value.grid = game.grid
+    useGameState().value.answer = text
+}
+
+export const checkCorrect = (submission:string) =>{
+    const state = useGameState()
+    if(submission.toLowerCase() === state.value.answer?.toLowerCase()){
+        state.value.level++
+        setGrid("answer")
+    }
 }
