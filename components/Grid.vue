@@ -1,7 +1,7 @@
 <template>
     <section ref="grid">
-        <p>{{ builtString.join("") }} {{ pressed }}</p>
-        <div class="space-x-2 space-y-2" v-for="row,rowIndex in rows">
+        <p><span class="px-2 py-1 bg-blue-500 text-white font-bold rounded">1/20</span> {{ builtString.join("") }}</p>
+        <div class="space-x-2 space-y-2" v-for="row,rowIndex in gameState.grid">
             <div 
              @mousedown="letterHover(rowIndex,letterIndex,true)"
              @dragenter="letterHover(rowIndex,letterIndex)"
@@ -20,14 +20,14 @@
 </template>
 
 <script setup lang="ts">
-import WordSearch from '@/utils/wordsearch'
 import { useMousePressed } from '@vueuse/core'
 
 const grid = ref<HTMLElement>()
+const gameState = useGameState()
 const selected = ref<string[]>([])
 
 onMounted(()=>{
-    createGame()
+    setGrid('baka')
 })
 
 const { pressed } = useMousePressed()
@@ -42,34 +42,24 @@ const builtString = computed(()=>selected.value.map(e=>{
     const rowIndex = parseInt(e.split(",")[0])
     const letterIndex = parseInt(e.split(",")[1])
     
-    return rows.value[rowIndex][letterIndex]
+    return gameState.value.grid[rowIndex][letterIndex]
 }))
 
 const letterHover = async (rowIndex:number,letterIndex:number,force?:boolean)=>{
     if(pressed.value || force){
         if(isSelected(rowIndex,letterIndex)) return;
+        if(!isValid(rowIndex,letterIndex)) return;
         selected.value.push(`${rowIndex},${letterIndex}`)
     }
 }
 
 const isSelected = (rowIndex:number,letterIndex:number) =>  selected.value.includes(`${rowIndex},${letterIndex}`)
 
-const rows = ref<string[][]>([
-    ['A','B','C','D'],
-    ['E','F','G','H']
-])
+const isValid = (rowIndex:number,letterIndex:number) =>{
+    if(selected.value.length === 0 ) return true
+    const lastRowIndex = parseInt(selected.value[selected.value.length-1].split(',')[0])
+    const lastLetterIndex = parseInt(selected.value[selected.value.length-1].split(',')[1])
 
-const createGame = () => {
-    const game = new WordSearch({
-        cols: 6,
-        rows: 6,
-        disabledDirections: ["N", "W", "NW", "SW"],
-        dictionary: ["Hello", "crêpe", "Škoda", "word", "search"],
-        maxWords: 20,
-        backwardsProbability: 0.3,
-        upperCase: true,
-        diacritics: true
-    })
-    rows.value = game.grid
+    return (Math.abs(lastLetterIndex - letterIndex) <= 1 && Math.abs(lastRowIndex - rowIndex) <= 1)
 }
 </script>
