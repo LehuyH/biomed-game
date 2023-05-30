@@ -1,14 +1,16 @@
 <template>
-    <aside class="h-full text-center space-y-2">
-        <h1 class="text-lg max-w-xs mx-auto">Use The Image and Hints to Find The Word!</h1>
+    <aside class="h-full text-center space-y-2 max-w-[25vw] w-full">
+        <h1 class="text-lg max-w-xs mx-auto">
+            <span class="text-6xl font-bold">{{ state.answer?.split("")[0] }}</span> is for
+        </h1>
         <img src="https://picsum.photos/200" class="rounded mx-auto"/>
-        <details>
-            <summary>💡 Hint 1</summary>
-            This is a hint
-        </details>
-        <details>
-            <summary>💡 Hint 2</summary>
-            This is a hint again!
+        <details class="w-full" v-for="hint,i in levels[state.level].hints">
+            <summary class="font-medium">💡 Hint {{ i+1 }}</summary>
+            <p class="text-gray-600">{{ hint }}</p>
         </details>
     </aside>
 </template>
+
+<script setup lang="ts">
+const state = useGameState()
+</script>

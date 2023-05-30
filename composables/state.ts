@@ -10,8 +10,8 @@ export const useGameState = () => useState('gameState',()=>{
 
 export const setGrid = (text:string)=>{
     const game = new WordSearch({
-        cols: 6,
-        rows: 6,
+        cols: text.length,
+        rows: text.length,
         dictionary: [text],
         maxWords: 20,
         backwardsProbability: 0.3,
@@ -26,6 +26,29 @@ export const checkCorrect = (submission:string) =>{
     const state = useGameState()
     if(submission.toLowerCase() === state.value.answer?.toLowerCase()){
         state.value.level++
-        setGrid("answer")
+        setGrid(levels[state.value.level].answer)
     }
 }
+
+interface Level{
+    answer:string
+    hints:string[]
+}
+
+export const levels:Level[] = [
+    {   
+        //Level starts at one so this is to push the index
+        answer:'Placeholder',
+        hints:[]
+    },
+    {
+        answer:'Atrium',
+        hints:['Upper chamber of the heart where blood enters','The heart has two, the left connecting to the lungs and the right connecting to the veins']
+    },{
+        answer:'BloodTypeO',
+        hints:['One of the major blood types','The only universal blood donor']
+    },{
+        answer:'Centromere',
+        hints:['Center of the chromosome','The place where two sister chromatids meet']
+    }
+]

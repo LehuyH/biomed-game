@@ -1,13 +1,13 @@
 <template>
     <section ref="grid">
         <p><span class="px-2 py-1 bg-blue-500 text-white font-bold rounded">{{gameState.level}}/20</span> {{ builtString.join("") }}</p>
-        <div class="space-x-2 space-y-2" v-for="row,rowIndex in gameState.grid">
+        <div v-auto-animate class="space-x-2 space-y-2" v-for="row,rowIndex in gameState.grid">
             <div 
              @mousedown="letterHover(rowIndex,letterIndex,true)"
              @dragenter="letterHover(rowIndex,letterIndex)"
              @mouseenter="letterHover(rowIndex,letterIndex)" 
-             
-             v-for="letter,letterIndex in row" class="w-16 inline-block cursor-select h-16 text-3xl text-center relative font-bold capitalize rounded transition"
+             v-auto-animate
+             v-for="letter,letterIndex in row" class="w-8 inline-block cursor-select h-8 text-center relative font-bold capitalize rounded transition"
             :class="{
                 'bg-slate-400': !isSelected(rowIndex,letterIndex),
                 'bg-green-400 text-white': isSelected(rowIndex,letterIndex),
@@ -27,7 +27,7 @@ const gameState = useGameState()
 const selected = ref<string[]>([])
 
 onMounted(()=>{
-    setGrid('floof')
+    setGrid(levels[1].answer)
 })
 
 const { pressed } = useMousePressed()
