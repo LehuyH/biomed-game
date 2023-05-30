@@ -1,13 +1,12 @@
 <template>
     <section ref="grid">
-        <p><span class="px-2 py-1 bg-blue-500 text-white font-bold rounded">{{gameState.level}}/20</span> {{ builtString.join("") }}</p>
-        <div v-auto-animate class="space-x-2 space-y-2" v-for="row,rowIndex in gameState.grid">
+        <p><span class="select-none px-2 py-1 bg-blue-500 text-white font-bold rounded">{{gameState.level}}/20</span> {{ builtString.join("") }}</p>
+        <div class="space-x-2 space-y-2 row" v-for="row,rowIndex in gameState.grid">
             <div 
              @mousedown="letterHover(rowIndex,letterIndex,true)"
              @dragenter="letterHover(rowIndex,letterIndex)"
              @mouseenter="letterHover(rowIndex,letterIndex)" 
-             v-auto-animate
-             v-for="letter,letterIndex in row" class="w-8 inline-block cursor-select h-8 text-center relative font-bold capitalize rounded transition"
+             v-for="letter,letterIndex in row" class="letter opacity-0 w-8 inline-block cursor-select h-8 text-center relative font-bold capitalize rounded transition"
             :class="{
                 'bg-slate-400': !isSelected(rowIndex,letterIndex),
                 'bg-green-400 text-white': isSelected(rowIndex,letterIndex),
@@ -20,14 +19,17 @@
 </template>
 
 <script setup lang="ts">
+import anime from 'animejs'
 import { useMousePressed } from '@vueuse/core'
 
 const grid = ref<HTMLElement>()
 const gameState = useGameState()
 const selected = ref<string[]>([])
 
-onMounted(()=>{
+onMounted(async ()=>{
     setGrid(levels[1].answer)
+    await nextTick()
+    revealGridAnimation()
 })
 
 const { pressed } = useMousePressed()
@@ -66,5 +68,15 @@ const isValid = (rowIndex:number,letterIndex:number) =>{
     const lastLetterIndex = parseInt(selected.value[selected.value.length-1].split(',')[1])
 
     return (Math.abs(lastLetterIndex - letterIndex) <= 1 && Math.abs(lastRowIndex - rowIndex) <= 1)
+}
+
+const revealGridAnimation = () =>{
+    anime({
+        targets:['.row','.letter'],
+        translateY:["200%","0%"],
+        opacity:[0,1],
+        easing:'cubicBezier(.5, .05, .1, .3)',
+        delay:anime.stagger(100)
+    })
 }
 </script>

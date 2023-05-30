@@ -1,4 +1,5 @@
 import WordSearch from '@/utils/wordsearch'
+import anime from 'animejs'
 
 export const useGameState = () => useState('gameState',()=>{
     return{
@@ -25,8 +26,27 @@ export const setGrid = (text:string)=>{
 export const checkCorrect = (submission:string) =>{
     const state = useGameState()
     if(submission.toLowerCase() === state.value.answer?.toLowerCase()){
-        state.value.level++
-        setGrid(levels[state.value.level].answer)
+        anime({
+            targets:['.letter'],
+            opacity:[1,0],
+            easing:'cubicBezier(.5, .05, .1, .3)',
+            delay:anime.stagger(10),
+            async complete(){
+                state.value.level++
+                setGrid(levels[state.value.level].answer)
+                await nextTick()
+                anime({
+                    targets:['.letter'],
+                    opacity:[0,1],
+                    delay:anime.stagger(50)
+                })
+                anime({
+                    targets:['.capital'],
+                    scale:[5,1],
+                    easing:'cubicBezier(.5, .05, .1, .3)'
+                })
+            }
+        })
     }
 }
 

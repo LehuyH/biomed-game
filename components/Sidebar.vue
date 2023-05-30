@@ -1,7 +1,7 @@
 <template>
-    <aside class="h-full text-center space-y-2 max-w-[25vw] w-full">
+    <aside class="h-full text-center space-y-2 max-w-[25vw] w-full select-none">
         <h1 class="text-lg max-w-xs mx-auto">
-            <span class="text-6xl font-bold">{{ state.answer?.split("")[0] }}</span> is for
+            <span class="text-6xl capital font-bold inline-block">{{ state.answer?.split("")[0] }}</span> is for
         </h1>
         <img src="https://picsum.photos/200" class="rounded mx-auto"/>
         <details class="w-full" v-for="hint,i in levels[state.level].hints">
