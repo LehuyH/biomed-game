@@ -12,7 +12,7 @@ export const useGameState = () => useState('gameState',()=>{
 export const setGrid = (text:string)=>{
     const game = new WordSearch({
         cols: text.length,
-        rows: text.length,
+        rows: Math.min(10,text.length),
         dictionary: [text],
         maxWords: 20,
         backwardsProbability: 0.3,
