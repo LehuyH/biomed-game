@@ -5,7 +5,8 @@ export const useGameState = () => useState('gameState',()=>{
     return{
         grid:[] as string[][],
         level:1,
-        answer:null as string|null
+        answer:null as string|null,
+        seconds:0
     }
 })
 

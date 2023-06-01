@@ -1,6 +1,10 @@
 <template>
     <section ref="grid">
-        <p><span class="select-none px-2 py-1 bg-blue-500 text-white font-bold rounded">{{gameState.level}}/20</span> {{ builtString.join("") }}</p>
+        <p>
+            <span class="select-none px-2 py-1 bg-blue-500 text-white font-bold rounded mr-2">{{gameState.level}}/20</span> 
+            <span class="select-none px-2 py-1 bg-slate-500 text-white font-bold rounded">Time: {{gameState.seconds}}</span> 
+            {{ builtString.join("") }}
+        </p>
         <div class="space-x-2 space-y-2 row" v-for="row,rowIndex in gameState.grid">
             <div 
              @mousedown="letterHover(rowIndex,letterIndex,true)"
@@ -25,11 +29,18 @@ import { useMousePressed } from '@vueuse/core'
 const grid = ref<HTMLElement>()
 const gameState = useGameState()
 const selected = ref<string[]>([])
+let interval = null as null|NodeJS.Timer
 
 onMounted(async ()=>{
     setGrid(levels[1].answer)
     await nextTick()
     revealGridAnimation()
+    interval = setInterval(()=> gameState.value.seconds++,1000)
+})
+
+onBeforeUnmount(()=>{
+    if(!interval) return
+    clearInterval(interval)
 })
 
 const { pressed } = useMousePressed()
