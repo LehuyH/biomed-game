@@ -3,7 +3,7 @@
         <h1 class="text-lg max-w-xs mx-auto">
             <span class="text-6xl capital font-bold inline-block">{{ state.answer?.split("")[0] }}</span> is for
         </h1>
-        <img src="https://picsum.photos/200" class="rounded mx-auto"/>
+        <img :src="`/img/${state.answer?.toLowerCase()}.png`" class="rounded mx-auto w-[200px]"/>
         <details class="w-full" v-for="hint,i in levels[state.level].hints">
             <summary class="font-medium">💡 Hint {{ i+1 }}</summary>
             <p class="text-gray-600">{{ hint }}</p>
