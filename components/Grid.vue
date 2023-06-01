@@ -5,13 +5,14 @@
             <div 
              @mousedown="letterHover(rowIndex,letterIndex,true)"
              @dragenter="letterHover(rowIndex,letterIndex)"
-             v-for="letter,letterIndex in row" class="letter opacity-0 w-8 inline-block cursor-select h-8 text-center relative font-bold capitalize rounded transition"
+             @mouseenter="letterHover(rowIndex,letterIndex)"
+             v-for="letter,letterIndex in row" class="letter opacity-0 w-10 inline-block cursor-select h-10 text-center relative font-bold capitalize rounded transition"
             :class="{
                 'bg-slate-400': !isSelected(rowIndex,letterIndex),
                 'bg-green-400 text-white': isSelected(rowIndex,letterIndex),
             }"
             >
-                <p @mouseenter="letterHover(rowIndex,letterIndex)" class="select-none absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%]">{{ letter }}</p>
+                <p class="select-none absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%]">{{ letter }}</p>
             </div>
         </div>
     </section>
